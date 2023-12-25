@@ -164,7 +164,7 @@ void bg(in vec2 p, out vec3 outputC ) {
     float r = (fbm(uv * 10.0))*colIntensity.r; //arbitrary values in perlin function to generate "galatical" colors
     float g = (fbm(uv * 20.0))*colIntensity.g;
     float b = (fbm(uv * 300.0))*colIntensity.b;
-    float fade = pow(1.0 - fbm(uv * Nebula), NebIntensity);
+    float fade = pow(1.0 - min(fbm(uv * Nebula), 1.0), NebIntensity);
     vec3 col = vec3(r,g,b);
     vec3 sky = vec3(pow(rand(uv), stars));
     sky += col * fade;
