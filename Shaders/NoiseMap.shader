@@ -78,8 +78,7 @@ uniform vec3 MOUNTAIN_COLOR    = vec3(0.8);
 
 float getHeight(in vec2 uv) {
     float temp      = fbm(vec2(fbm(vec2(fbm(uv*10.0), fbm(uv*5.0))), fbm(uv * 15.0)));
-    temp           *= temp * temp;
-    return temp * 0.47;
+    return temp;
 }
 
 float worldEdge(in vec2 uv, float worldHeight, float edgeHeight, in vec2 downLeft) {
@@ -112,7 +111,7 @@ void main() {
     float height    = getHeight(uv * LOD);
     if (APPLY_BORDER != 0)
         height = worldEdge(uv, height, BORDER_LEVEL, vec2(0.3));
-    vec3 col;
+    vec3 col = vec3(height);
     colorize(height, col);
     FragColor = vec4(col, 1.0);
 }

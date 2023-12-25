@@ -40,7 +40,6 @@ float noise(in vec2 pos) {
     float d        = rand(floor(pos + vec2(0.0, 1.0)));
     vec2 xy = localPos*localPos*(3.0 - 2.0*localPos);
     return mix(mix(a, b, xy.x), mix(d, c, xy.x), xy.y);   
-    return mix(mix(a, b, xy.x), mix(d, c, xy.x), xy.y);   
 }
 
 float fbm(in vec2 pos) {
@@ -108,8 +107,7 @@ float getHeight(in vec2 p) {
         temp      = fbm(p*10.0);
     else 
         temp      = fbm(vec2(fbm(vec2(fbm(p*10.0), fbm(p*5.0))), fbm(p * 15.0)));
-    temp           *= temp * temp;
-    return temp * 0.47;
+    return temp;
 }
 
 float worldEdge(in vec2 p, float worldHeight, float edgeHeight, in vec2 downLeft) {
@@ -179,7 +177,7 @@ void bg(in vec2 p, out vec3 outputC ) {
 int   gMaxRaySteps = 30;
 float gMinForInter = 0.0001;
 vec3  gBgCol       = vec3(0.05, 0.01, 0.01);
-vec3  gAmbientLight= vec3(0.04);
+uniform vec3  gAmbientLight= vec3(0.04);
 
 vec2  gMouse;
 
@@ -187,7 +185,7 @@ vec3 nullVec3;
 
 vec2 uv0;
 
-vec3 atmCol                   = vec3(0.88,0.88, 1.3);
+uniform vec3  atmCol                  = vec3(0.88,0.88, 1.3);
 uniform float atmThickness            = 0.095;
 uniform float atmContrib              = 3.6; //From 1.0 to higher values
 float maxAtmInteriorThickness = 100.0;
@@ -323,8 +321,8 @@ void rayMarch(in Camera cam, in vec2 p, out vec3 col, out vec3 interPos) {
         steps          += nearest;
         currentPosition = steps * rayDir;
         nearestStep     = min(nearestStep, steps);
-        minNear         = min(minNear, nearest); //temp for atmosphere
-        
+        //minNear       = min(minNear, nearest); //temp for atmosphere
+        minNear         = min(minNear, distance(currentPosition, s.position) - s.radius);
         //We are sure not to hit the sphere
         if (distance(currentPosition, s.position) > raymarchingRadius ) {
             break;
