@@ -73,12 +73,12 @@ uniform float BORDER_LEVEL       = -0.4;
 uniform vec3 OCEAN_COLOR       = vec3(0.0, 0.0, 1.0);
 uniform vec3 PLAIN_COLOR       = vec3(0.0, 0.5,0.0);
 uniform vec3 MOUNTAIN_COLOR    = vec3(0.8);
-
-
+uniform float NOISE_SEED       = 1.0;
+uniform float MAX_VALUE        = 1.0;
 
 float getHeight(in vec2 uv) {
     float temp      = fbm(vec2(fbm(vec2(fbm(uv*10.0), fbm(uv*5.0))), fbm(uv * 15.0)));
-    return temp;
+    return pow(temp,NOISE_SEED) * MAX_VALUE;
 }
 
 float worldEdge(in vec2 uv, float worldHeight, float edgeHeight, in vec2 downLeft) {

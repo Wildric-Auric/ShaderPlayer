@@ -12,7 +12,7 @@ class controller : Scriptable {
 public:
 	SCRIPT_CONSTR(controller)
 	
-	ShaderCombo currentShader = ShaderCombo::NONE;
+	ShaderCombo currentShader = ShaderCombo::PLANET;
 
 	void Start()  override;
 	void Update() override;

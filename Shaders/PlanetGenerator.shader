@@ -96,6 +96,9 @@ uniform int CHEAP_NOISE   = 1;
 uniform int CHEAP_NORMALS = 0;
 uniform vec2 PLANET_ROTATION;
 uniform float MAX_HEIGHT = 0.001;
+uniform float MAX_VALUE        = 1.0;
+uniform float NOISE_SEED       = 1.0;
+
 uniform vec3 LIGHT_POSITION;
 uniform vec2 uRes;
 
@@ -107,7 +110,7 @@ float getHeight(in vec2 p) {
         temp      = fbm(p*10.0);
     else 
         temp      = fbm(vec2(fbm(vec2(fbm(p*10.0), fbm(p*5.0))), fbm(p * 15.0)));
-    return temp;
+    return pow(temp,NOISE_SEED) * MAX_VALUE;
 }
 
 float worldEdge(in vec2 p, float worldHeight, float edgeHeight, in vec2 downLeft) {
@@ -144,6 +147,8 @@ void noiseMap(in vec2 p, out vec4 outputC) {
         height = worldEdge(pp, height, BORDER_LEVEL, vec2(0.3));
     vec3 col;
     colorize(height, col);
+    if (height < OCEAN_LEVEL)
+        height = OCEAN_LEVEL;
     outputC = vec4(col, height);
 }
 
@@ -324,7 +329,7 @@ void rayMarch(in Camera cam, in vec2 p, out vec3 col, out vec3 interPos) {
         //minNear       = min(minNear, nearest); //temp for atmosphere
         minNear         = min(minNear, distance(currentPosition, s.position) - s.radius);
         //We are sure not to hit the sphere
-        if (distance(currentPosition, s.position) > raymarchingRadius ) {
+        if (distance(currentPosition, s.position) > raymarchingRadius + 0.001 ) {
             break;
         }
 
